@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dictionary App</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">    
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="logo">
+      <span
+        class="iconify"
+        data-icon="mdi-book-alphabet"
+        data-inline="false"
+      ></span>
+      Dictionary App
+    </div>
+    <form class="form" onsubmit="fetchDefinition(); return false">
+      <input class="search-bar" name="Search" />
+      <input class="btn btn-primary" type="submit" value="Submit" />
+      <i class="fa fa-search" aria-hidden="true"></i>
+
+    </form>
+
+    <div class="container">
+        <div class="container-content">
+      <div class="meaning-content">
+          <hr>
+
+        <div class="part-of-speech-content">
+          <div>Definitions:</div>
+          <div class="definition"></div>
+        </div>
+        <div class="part-of-speech-content">
+          <div>Example:</div>
+          <div class="example"></div>
+        </div>
+        <div class="part-of-speech-content">
+            <div>Part Of Speech:</div>
+            <div class="part-of-speech"></div>
+          </div>
+      </div>
+      <br />
+    </div>
+    </div>
+    <div class="footer">
+      Definitions courtesy of <a href="https://www.lexico.com/"> lexico.com</a>
+      ||A Project by Kumar Sumit
+    </div>
+  </body>
+  <script>
+    let container;
+    let partOfSpeech;
+    let definition;
+    let example;
+    let search;
+    window.onload = () => {
+      container = document.querySelector(".container");
+      partOfSpeech = document.querySelector(".part-of-speech");
+      definition = document.querySelector(".definition");
+      example = document.querySelector(".example");
+      search = document.querySelector(".search-bar");
+    };
+
+    function fetchDefinition() {
+      if (!search.value) return;
+      const word = search.value.toLowerCase();
+      console.log(word, "++++++++++++word");
+      fetch(`https://api.dictionaryapi.dev/api/v2/entries/en_US/${word}`)
+        .then((res) => res.json())
+        .then((res, reject) => {
+            if(!res[0]) 
+            return Promise.reject(new Error());
+          partOfSpeech.innerText = res[0].meanings[0].partOfSpeech;
+          definition.innerText = res[0].meanings[0].definitions[0].definition;
+          example.innerText =
+            res[0].meanings[1].definitions[0].example ||
+            "Example not available";
+        })
+        .catch((err) => {
+            definition.innerText =
+            "That word is not defined in our dictionary. Check for spelling errors and try again";
+          partOfSpeech.innerText = "Error";
+          example.innerText = " ";
+        });
+    }
+  </script>
+</html>
