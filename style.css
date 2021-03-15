@@ -43,9 +43,18 @@ body{
 display: flex;
 justify-content: space-between;
 margin: 10px;
+border-bottom: 1px dashed black;
 }
 .container-content{
     display: flex;
     width: 700px;
     background-color: #d3d3d3;
+}
+.col-first{
+    /* width: 100%; */
+    /* background-color: #0f0; */
+}
+.col-second{
+    width: 80%;
+    /* background-color: #00f; */
 }
